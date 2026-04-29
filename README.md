@@ -72,6 +72,7 @@ php artisan migrate:fresh
 
 # Sembrar la base de datos con el usuario administrador por defecto
 php artisan db:seed --class=AdminSeeder
+php artisan db:seed --class=DatabaseSeeder
 ```
 
 
