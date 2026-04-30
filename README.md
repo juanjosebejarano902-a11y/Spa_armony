@@ -1,4 +1,4 @@
-# SPA Armonía - Sistema de Gestión 🌿
+# SPA Armonía - Sistema de Gestión y agendamiento 🌿
 
 Un sistema de gestión integral, moderno y responsivo para el SPA Armonía. Construido para agilizar la administración de clientes, masajistas, servicios y control de citas exclusivas de manera elegante.
 
