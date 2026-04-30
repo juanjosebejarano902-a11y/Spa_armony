@@ -68,23 +68,23 @@
 
         /* Colores según estado */
         .fc-event.bg-pendiente {
-            background-color: #fef3c7;
-            color: #b45309;
+            background-color: #f59e0b;
+            color: #ffffff;
         }
 
         .fc-event.bg-confirmada {
-            background-color: #e0e7ff;
-            color: #4338ca;
+            background-color: #6366f1;
+            color: #ffffff;
         }
 
         .fc-event.bg-finalizada {
-            background-color: #d1fae5;
-            color: #047857;
+            background-color: #10b981;
+            color: #ffffff;
         }
 
         .fc-event.bg-cancelada {
-            background-color: #fee2e2;
-            color: #b91c1c;
+            background-color: #ef4444;
+            color: #ffffff;
         }
 
         .fc-daygrid-day-number {

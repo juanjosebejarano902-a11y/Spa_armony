@@ -21,8 +21,8 @@
             </div>
 
             {{-- Table --}}
-            <div class="table-container">
-                <table>
+            <div class="table-container overflow-x-auto">
+                <table class="min-w-full whitespace-nowrap">
                     <thead>
                         <tr>
                             <th>ID</th>
