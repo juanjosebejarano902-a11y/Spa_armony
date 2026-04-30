@@ -59,6 +59,7 @@ class StoreCitasRequest extends FormRequest
             }
 
             if ($this->fecha && $this->masajista) {
+                //carbon es una librería para trabajar con fechas de manera sencilla y poder realizar validaciones de rango de fechas
                 $fechaInicio = \Carbon\Carbon::parse($this->fecha);
                 $minutosTotales = count((array) $this->servicios) * 60;
                 if ($minutosTotales === 0)
