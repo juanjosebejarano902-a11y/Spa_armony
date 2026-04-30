@@ -296,20 +296,42 @@
                                             <span class="text-red-500">*</span></legend>
                                         <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             @foreach($servicios as $servicio)
-                                                <div 
-                                                    class="relative flex items-center p-4 border border-gray-200 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
-                                                    <div class="flex h-6 items-center">
-                                                        <input id="servicio_{{ $servicio->id_servicio }}" name="servicios[]"
-                                                            value="{{ $servicio->id_servicio }}" type="checkbox"
-                                                            class="h-5 w-5 rounded border-gray-300 text-primary-600 focus:ring-primary-600"
-                                                            {{ is_array(old('servicios')) && in_array($servicio->id_servicio, old('servicios')) ? 'checked' : '' }}>
+                                                <div x-data="{ showDesc: false }"
+                                                    class="relative flex flex-col p-4 border border-gray-200 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
+                                                    <div class="flex items-center w-full">
+                                                        <div class="flex h-6 items-center">
+                                                            <input id="servicio_{{ $servicio->id_servicio }}" name="servicios[]"
+                                                                value="{{ $servicio->id_servicio }}" type="checkbox"
+                                                                class="h-5 w-5 rounded border-gray-300 text-primary-600 focus:ring-primary-600"
+                                                                {{ is_array(old('servicios')) && in_array($servicio->id_servicio, old('servicios')) ? 'checked' : '' }}>
+                                                        </div>
+                                                        <div class="ml-3 text-sm leading-6 flex-1">
+                                                            <label for="servicio_{{ $servicio->id_servicio }}"
+                                                                class="font-medium text-gray-900 select-none cursor-pointer">
+                                                                {{ $servicio->nombre_servicio }}
+                                                            </label>
+                                                            <p class="text-gray-500">${{ number_format($servicio->precio, 0) }}</p>
+                                                        </div>
+                                                        <div class="ml-3 shrink-0">
+                                                            <button type="button" @click="showDesc = !showDesc" class="text-xs font-medium text-primary-600 hover:text-primary-800 focus:outline-none flex items-center gap-1 transition-colors">
+                                                                <span x-text="showDesc ? 'Ocultar' : 'Ver descripción'"></span>
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200" :class="{ 'rotate-180': showDesc }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                                </svg>
+                                                            </button>
+                                                        </div>
                                                     </div>
-                                                    <div class="ml-3 text-sm leading-6 flex-1">
-                                                        <label for="servicio_{{ $servicio->id_servicio }}"
-                                                            class="font-medium text-gray-900 select-none cursor-pointer">
-                                                            {{ $servicio->nombre_servicio }}
-                                                        </label>
-                                                        <p class="text-gray-500">${{ number_format($servicio->precio, 0) }}</p>
+                                                    
+                                                    {{-- Descripción colapsable --}}
+                                                    <div x-show="showDesc" 
+                                                         x-transition:enter="transition ease-out duration-200"
+                                                         x-transition:enter-start="opacity-0 -translate-y-2"
+                                                         x-transition:enter-end="opacity-100 translate-y-0"
+                                                         x-transition:leave="transition ease-in duration-150"
+                                                         x-transition:leave-start="opacity-100 translate-y-0"
+                                                         x-transition:leave-end="opacity-0 -translate-y-2"
+                                                         class="mt-3 text-sm text-gray-600 border-t border-gray-200 pt-3" style="display: none;">
+                                                        {{ $servicio->descripcion ?? 'Sin descripción disponible.' }}
                                                     </div>
                                                 </div>
                                             @endforeach

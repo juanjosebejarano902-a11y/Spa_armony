@@ -23,23 +23,23 @@ class StoreCitasRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'es_nuevo_cliente'       => 'required|boolean',
-            
-            // Si es un cliente existente
-            'id_cliente'             => 'required_if:es_nuevo_cliente,false|nullable|exists:clientes,cedula',
-            
-            // Si es un nuevo cliente
-            'nuevo_cliente_cedula'   => 'required_if:es_nuevo_cliente,true|nullable|unique:clientes,cedula',
-            'nuevo_cliente_nombre'   => 'required_if:es_nuevo_cliente,true|nullable|string|max:255',
-            'nuevo_cliente_telefono' => 'required_if:es_nuevo_cliente,true|nullable|string|max:15',
-            'nuevo_cliente_correo'   => 'required_if:es_nuevo_cliente,true|nullable|email|max:255',
+            'es_nuevo_cliente' => 'required|boolean',
 
-            'fecha'        => 'required|date|after:now',
-            'masajista'    => 'required|exists:masajistas,cedula',
-            'nota'         => 'nullable|string|max:255',
-            'habitacion'   => 'required|integer|min:1',
-            'servicios'    => 'required|array|min:1',
-            'servicios.*'  => 'exists:servicios,id_servicio',
+            // Si es un cliente existente
+            'id_cliente' => 'required_if:es_nuevo_cliente,false|nullable|exists:clientes,cedula',
+
+            // Si es un nuevo cliente
+            'nuevo_cliente_cedula' => 'required_if:es_nuevo_cliente,true|nullable|digits_between:6,10|unique:clientes,cedula',
+            'nuevo_cliente_nombre' => 'required_if:es_nuevo_cliente,true|nullable|string|max:100',
+            'nuevo_cliente_telefono' => 'required_if:es_nuevo_cliente,true|nullable|digits_between:7,10',
+            'nuevo_cliente_correo' => 'required_if:es_nuevo_cliente,true|nullable|email|unique:clientes,correo',
+
+            'fecha' => 'required|date|after:now',
+            'masajista' => 'required|exists:masajistas,cedula',
+            'nota' => 'nullable|string|max:255',
+            'habitacion' => 'required|integer|min:1',
+            'servicios' => 'required|array|min:1',
+            'servicios.*' => 'exists:servicios,id_servicio',
         ];
     }
 
@@ -61,7 +61,8 @@ class StoreCitasRequest extends FormRequest
             if ($this->fecha && $this->masajista) {
                 $fechaInicio = \Carbon\Carbon::parse($this->fecha);
                 $minutosTotales = count((array) $this->servicios) * 60;
-                if ($minutosTotales === 0) $minutosTotales = 60;
+                if ($minutosTotales === 0)
+                    $minutosTotales = 60;
                 $fechaFin = $fechaInicio->copy()->addMinutes($minutosTotales);
 
                 $citasExistentes = Citas::where('masajista', $this->masajista)
@@ -84,15 +85,18 @@ class StoreCitasRequest extends FormRequest
                 }
 
                 if ($conflicto) {
-                    $validator->errors()->add('masajista',
-                        'El masajista ya tiene una cita agendada en ese rango de tiempo.');
+                    $validator->errors()->add(
+                        'masajista',
+                        'El masajista ya tiene una cita agendada en ese rango de tiempo.'
+                    );
                 }
             }
 
             if ($this->fecha && $this->habitacion) {
                 $fechaInicio = \Carbon\Carbon::parse($this->fecha);
                 $minutosTotales = count((array) $this->servicios) * 60;
-                if ($minutosTotales === 0) $minutosTotales = 60;
+                if ($minutosTotales === 0)
+                    $minutosTotales = 60;
                 $fechaFin = $fechaInicio->copy()->addMinutes($minutosTotales);
 
                 $citasExistentesHab = Citas::where('habitacion', $this->habitacion)
@@ -115,8 +119,10 @@ class StoreCitasRequest extends FormRequest
                 }
 
                 if ($conflictoHab) {
-                    $validator->errors()->add('habitacion',
-                        'La habitación ya está ocupada en ese rango de tiempo.');
+                    $validator->errors()->add(
+                        'habitacion',
+                        'La habitación ya está ocupada en ese rango de tiempo.'
+                    );
                 }
             }
         });
@@ -125,25 +131,33 @@ class StoreCitasRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'id_cliente.required_if'             => 'Debe seleccionar un cliente existente.',
-            'nuevo_cliente_cedula.required_if'   => 'La cédula del nuevo cliente es obligatoria.',
-            'nuevo_cliente_cedula.unique'        => 'Esta cédula ya está registrada, busque al cliente existente.',
-            'nuevo_cliente_nombre.required_if'   => 'El nombre del nuevo cliente es obligatorio.',
+            'id_cliente.required_if' => 'Debe seleccionar un cliente existente.',
+
+            'nuevo_cliente_cedula.required_if' => 'La cédula del nuevo cliente es obligatoria.',
+            'nuevo_cliente_cedula.digits_between' => 'La cédula debe tener entre 6 y 10 dígitos.',
+            'nuevo_cliente_cedula.unique' => 'Esta cédula ya está registrada, busque al cliente existente.',
+
+            'nuevo_cliente_nombre.required_if' => 'El nombre del nuevo cliente es obligatorio.',
+
             'nuevo_cliente_telefono.required_if' => 'El teléfono del nuevo cliente es obligatorio.',
-            'nuevo_cliente_correo.required_if'   => 'El correo de contacto es obligatorio.',
-            'fecha.required'       => 'La fecha es obligatoria.',
-            'fecha.date'           => 'La fecha debe ser una fecha válida.',
-            'fecha.after'          => 'La fecha debe ser posterior a la actual.',
-            'masajista.required'   => 'El masajista es obligatorio.',
-            'masajista.exists'     => 'El masajista seleccionado no existe.',
-            'nota.string'          => 'La nota debe ser texto.',
-            'nota.max'             => 'La nota no puede superar los 255 caracteres.',
-            'habitacion.required'  => 'La habitación es obligatoria.',
-            'habitacion.integer'   => 'La habitación debe ser un número.',
-            'habitacion.min'       => 'La habitación debe ser un número positivo.',
-            'servicios.required'   => 'Debe seleccionar al menos un servicio.',
-            'servicios.min'        => 'Debe seleccionar al menos un servicio.',
-            'servicios.*.exists'   => 'Uno de los servicios seleccionados no existe.',
+            'nuevo_cliente_telefono.digits_between' => 'El teléfono debe tener entre 7 y 10 dígitos.',
+            'nuevo_cliente_correo.required_if' => 'El correo de contacto es obligatorio.',
+            'nuevo_cliente_correo.email' => 'El correo debe ser un correo válido.',
+            'nuevo_cliente_correo.unique' => 'El correo ya está registrado en el sistema, intente con otro.',
+
+            'fecha.required' => 'La fecha es obligatoria.',
+            'fecha.date' => 'La fecha debe ser una fecha válida.',
+            'fecha.after' => 'La fecha debe ser posterior a la actual.',
+            'masajista.required' => 'El masajista es obligatorio.',
+            'masajista.exists' => 'El masajista seleccionado no existe.',
+            'nota.string' => 'La nota debe ser texto.',
+            'nota.max' => 'La nota no puede superar los 255 caracteres.',
+            'habitacion.required' => 'La habitación es obligatoria.',
+            'habitacion.integer' => 'La habitación debe ser un número.',
+            'habitacion.min' => 'La habitación debe ser un número positivo.',
+            'servicios.required' => 'Debe seleccionar al menos un servicio.',
+            'servicios.min' => 'Debe seleccionar al menos un servicio.',
+            'servicios.*.exists' => 'Uno de los servicios seleccionados no existe.',
         ];
     }
 }

@@ -20,7 +20,7 @@ class StoreMasajistaRequest extends FormRequest
             'cedula' => 'required|digits_between:6,10|unique:masajistas,cedula',
             'nombre' => 'required|string|max:100',
             'telefono' => 'required|digits_between:7,10',
-            'porcentaje_comision' => 'required|numeric|min:0|max:100',
+            'porcentaje_comision' => 'required|numeric|min:20|max:50',
             'servicios' => 'nullable|array',
             'servicios.*' => 'exists:servicios,id_servicio',
         ];
@@ -37,6 +37,9 @@ class StoreMasajistaRequest extends FormRequest
             'nombre.max' => 'El nombre no puede superar los 100 caracteres.',
             'telefono.required' => 'El teléfono es obligatorio.',
             'telefono.digits_between' => 'El teléfono debe tener entre 7 y 10 dígitos.',
+            'porcentaje_comision.required' => 'El porcentaje de comisión es obligatorio',
+            'porcentaje_comision.min' => 'El porcentaje de comisión debe ser mayor o igual a 20%',
+            'porcentaje_comision.max' => 'El porcentaje de comisión debe ser menor o igual a 50%'
         ];
     }
 }
