@@ -59,7 +59,7 @@
                                                 Cambiar Estado
                                             </button>
                                         </form>
-                                        <a href="{{ route('habitaciones.edit', $habitacion->id) }}"
+                                        <a href="{{ route('habitaciones.edit', $habitacion) }}"
                                             class="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-primary-700 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -67,7 +67,7 @@
                                             </svg>
                                             Editar
                                         </a>
-                                        <form action="{{ route('habitaciones.destroy', $habitacion->id) }}" method="POST"
+                                        <form action="{{ route('habitaciones.destroy', $habitacion) }}" method="POST"
                                             onsubmit="return confirm('¿Estás seguro?')">
                                             @csrf
                                             @method('DELETE')

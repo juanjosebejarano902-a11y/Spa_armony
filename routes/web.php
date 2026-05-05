@@ -30,7 +30,7 @@ Route::middleware('auth:admin')->group(function () {
 
     Route::resource('servicios', ServiciosController::class);
 
-    Route::resource('habitaciones', HabitacionesController::class);
+    Route::resource('habitaciones', HabitacionesController::class, ['parameters' => ['habitaciones' => 'habitacion']]);
     Route::patch('habitaciones/{habitacion}/toggle-estado', [HabitacionesController::class, 'toggleEstado'])->name('habitaciones.toggle-estado');
 
     Route::resource('clientes', CLienteController::class);

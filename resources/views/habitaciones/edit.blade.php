@@ -20,7 +20,7 @@
 
             {{-- Form --}}
             <div class="card overflow-hidden">
-                <form action="{{ route('habitaciones.update', $habitacion->id) }}" method="POST">
+                <form action="{{ route('habitaciones.update', $habitacion) }}" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="p-6 sm:p-8 space-y-6">
